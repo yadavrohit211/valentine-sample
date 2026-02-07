@@ -1,135 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Celebration 🎉</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Celebration 🎉</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    body {
-      overflow: hidden;
-    }
+body {
+  overflow: hidden;
+}
 
-    .container {
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-    }
+/* Container */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100svh; /* mobile safe viewport */
+}
 
-    /* Video section */
-    .video-section {
-      flex: 1;
-      background: black;
-    }
+/* Video section */
+.video-section {
+  flex: 1;
+  background: black;
+}
 
-    .video-section video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+.video-section video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-    /* Celebration section */
-    .celebration-section {
-      flex: 1;
-      background: linear-gradient(135deg, #d10000, #ff3b3b);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-align: center;
-      overflow: hidden;
-    }
+/* Celebration section */
+.celebration-section {
+  flex: 1;
+  background: linear-gradient(135deg, #d10000, #ff3b3b);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  padding: 20px;
+}
 
-    .celebration-content {
-      z-index: 2;
-    }
+.celebration-content {
+  z-index: 2;
+}
 
-    .celebration-content h1 {
-      font-size: 3rem;
-    }
+.celebration-content h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+}
 
-    .celebration-content p {
-      font-size: 1.3rem;
-      margin-top: 10px;
-    }
+.celebration-content p {
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
+  margin-top: 10px;
+}
 
-    /* Floating flowers */
-    .flower {
-      position: absolute;
-      top: -50px;
-      font-size: 30px;
-      animation: fall linear infinite;
-      opacity: 0.9;
-    }
+/* Floating flowers */
+.flower {
+  position: absolute;
+  top: -50px;
+  animation: fall linear infinite;
+  opacity: 0.9;
+  pointer-events: none;
+}
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-      }
-    }
+@keyframes fall {
+  to {
+    transform: translateY(120svh);
+  }
+}
 
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
+/* Mobile layout */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
 
-      .celebration-content h1 {
-        font-size: 2.2rem;
-      }
-    }
-  </style>
+  .video-section {
+    height: 50svh;
+  }
+
+  .celebration-section {
+    height: 50svh;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="container">
-    <!-- Video Side -->
-    <div class="video-section">
-      <video autoplay loop muted playsinline>
-        <source src="celebration.mp4" type="video/mp4">
-        Your browser does not support video.
-      </video>
-    </div>
-
-    <!-- Celebration Side -->
-    <div class="celebration-section">
-      <div class="celebration-content">
-        <h1>Thank You Accepting The Proposal 🙂 </h1>
-        <p>Promise You’ll Never Regret Your Decision 🙂💞</p>
-      </div>
-    </div>
+<div class="container">
+  <!-- Video -->
+  <div class="video-section">
+    <video id="video" autoplay loop muted playsinline>
+      <source src="celebration.mp4" type="video/mp4">
+    </video>
   </div>
 
-  <script>
-    const celebrationSection = document.querySelector('.celebration-section');
-    const flowers = ['🌸', '🌹', '💐', '🌺', '❤️'];
+  <!-- Celebration -->
+  <div class="celebration-section">
+    <div class="celebration-content">
+      <h1>Thank You for Accepting the Proposal 🙂</h1>
+      <p>Promise You’ll Never Regret Your Decision 🙂💞</p>
+    </div>
+  </div>
+</div>
 
-    function createFlower() {
-      const flower = document.createElement('div');
-      flower.classList.add('flower');
-      flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+<script>
+/* iOS autoplay fallback */
+const video = document.getElementById("video");
+video.play().catch(() => {
+  document.body.addEventListener("touchstart", () => video.play(), { once: true });
+});
 
-      flower.style.left = Math.random() * 100 + 'vw';
-      flower.style.animationDuration = (4 + Math.random() * 4) + 's';
-      flower.style.fontSize = (30 + Math.random() * 25) + 'px';
+/* Flowers */
+const celebrationSection = document.querySelector('.celebration-section');
+const flowers = ['🌸','🌹','💐','🌺','❤️'];
 
-      celebrationSection.appendChild(flower);
+function createFlower() {
+  const flower = document.createElement('div');
+  flower.className = 'flower';
+  flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
 
-      setTimeout(() => {
-        flower.remove();
-      }, 8000);
-    }
+  flower.style.left = Math.random() * 100 + 'vw';
+  flower.style.fontSize = (20 + Math.random() * 20) + 'px';
+  flower.style.animationDuration = (5 + Math.random() * 4) + 's';
 
-    setInterval(createFlower, 50);
-  </script>
+  celebrationSection.appendChild(flower);
+
+  setTimeout(() => flower.remove(), 9000);
+}
+
+/* Reduce load on mobile */
+setInterval(createFlower, 120);
+</script>
 
 </body>
 </html>
