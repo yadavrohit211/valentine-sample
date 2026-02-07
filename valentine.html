@@ -13,7 +13,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       overflow: hidden;
     }
 
@@ -24,71 +24,57 @@
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       width: 85%;
-      max-width: 380px;
-      min-height: 450px; /* Thoda extra height for mobile */
+      max-width: 350px;
+      min-height: 480px; /* Fixed height to prevent collapse */
       position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
     }
 
     h1 {
       color: #ff3366;
       font-size: 1.8rem;
-      margin: 20px 0;
-      line-height: 1.2;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     .btn-container {
+      flex: 1; /* Occupies all space below title */
       position: relative;
-      flex-grow: 1; /* Pure box ka space use karega */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
+      width: 100%;
     }
 
     button {
-      /* DEFAULT BIG SIZE */
-      padding: 18px 30px;
-      font-size: 20px; 
+      padding: 18px 32px;
+      font-size: 22px; 
       font-weight: 800;
       border: none;
       border-radius: 15px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       touch-action: manipulation;
-      text-transform: uppercase;
-    }
-
-    /* MOBILE SPECIFIC OVERRIDE */
-    @media (max-width: 480px) {
-      h1 { font-size: 1.6rem; }
-      
-      button {
-        padding: 22px 35px; /* Mobile par aur bada */
-        font-size: 24px;   /* Text clearly visible */
-        border-radius: 20px;
-      }
-      
-      .box {
-        width: 90%;
-        min-height: 500px;
-      }
     }
 
     #yesBtn {
       background: #ff3366;
       color: white;
-      box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+      position: absolute;
+      left: 50%;
+      top: 20%;
+      transform: translateX(-50%);
       z-index: 10;
+      white-space: nowrap;
     }
 
     #noBtn {
       background: #eee;
       color: #666;
-      position: relative;
+      position: absolute;
+      left: 50%;
+      top: 60%;
+      transform: translateX(-50%);
       z-index: 5;
+      white-space: nowrap;
     }
 
     .heart {
@@ -111,7 +97,7 @@
   <div class="box" id="box">
     <h1>Will you be my Valentine? 💖</h1>
 
-    <div class="btn-container" id="btnWrapper">
+    <div class="btn-container" id="container">
       <button id="yesBtn">YES! 💘</button>
       <button id="noBtn">NO 😜</button>
     </div>
@@ -120,44 +106,44 @@
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
-    const box = document.getElementById("box");
+    const container = document.getElementById("container");
 
-    function moveButton() {
-      noBtn.style.position = 'absolute';
-      
-      // Box ke dimensions
-      const boxRect = box.getBoundingClientRect();
+    function moveButton(e) {
+      if (e) e.preventDefault();
+
+      const containerRect = container.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
-      // Is baar logic change kiya hai taaki button card ke title se na takraye
-      // Button sirf nichle 60% hisse mein move karega
-      const maxX = boxRect.width - btnRect.width - 20;
-      const maxY = boxRect.height - btnRect.height - 40;
+      // Isko container ke bounds ke andar hi rakhenge
+      const maxX = containerRect.width - btnRect.width;
+      const maxY = containerRect.height - btnRect.height;
 
-      const randomX = Math.max(10, Math.floor(Math.random() * maxX));
-      const randomY = Math.max(100, Math.floor(Math.random() * maxY)); // Start from 100px down
+      // Random position within the container area
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
 
+      // Remove the initial transform translate
+      noBtn.style.transform = "none";
       noBtn.style.left = randomX + "px";
       noBtn.style.top = randomY + "px";
       
-      // Grow YES button
+      // Grow YES button on every NO attempt
       const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-      if (currentSize < 50) {
-        yesBtn.style.fontSize = (currentSize + 3) + "px";
+      if (currentSize < 80) { // Max size cap
+        yesBtn.style.fontSize = (currentSize + 5) + "px";
         yesBtn.style.padding = "25px 45px";
       }
     }
 
     noBtn.addEventListener("mouseover", moveButton);
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      moveButton();
-    });
+    noBtn.addEventListener("touchstart", moveButton);
 
     yesBtn.addEventListener("click", () => {
-      alert("I knew it! ❤️ See you on Valentine's Day!");
+      // Direct call to celebration page
+      window.location.href = "celebration.html";
     });
 
+    // Background decoration
     function createHeart() {
       const heart = document.createElement("div");
       heart.className = "heart";
