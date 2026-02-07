@@ -3,35 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <title>Be My Valentine 💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #ff4d6d, #ff8fab);
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: Arial, sans-serif;
       overflow: hidden;
+      padding: 20px;
     }
 
     .box {
       background: white;
-      padding: 40px;
+      padding: 30px 20px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 350px;
+      position: relative;
     }
 
     h1 {
       color: #ff3366;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      font-size: 1.6rem;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     button {
-      padding: 12px 30px;
-      font-size: 18px;
+      padding: 12px 24px;
+      font-size: 16px;
       border: none;
       border-radius: 25px;
       cursor: pointer;
@@ -40,7 +53,6 @@
     #yesBtn {
       background: #ff3366;
       color: white;
-      margin-right: 20px;
     }
 
     #noBtn {
@@ -48,25 +60,45 @@
       color: white;
       position: absolute;
     }
+
+    /* Mobile tweaks */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 10px 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
+  <div class="box" id="box">
     <h1>Will you be my Valentine? 💖</h1>
-    <button id="yesBtn">YES 💘</button>
-    <button id="noBtn">NO 😜</button>
+
+    <div class="btn-container">
+      <button id="yesBtn">YES 💘</button>
+      <button id="noBtn">NO 😜</button>
+    </div>
   </div>
 
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
+    const box = document.getElementById("box");
 
-    // Move NO button when user tries to click
+    // Move NO button inside the card
     noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 50);
+      const boxRect = box.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const x = Math.random() * (boxRect.width - btnRect.width);
+      const y = Math.random() * (boxRect.height - btnRect.height);
+
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
     });
